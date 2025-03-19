@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace CodingTracker.S1m0n32002.Models
 {
+    /// <summary>
+    /// Manages the settings of the application.
+    /// </summary>
     class Settings
     {
         /// <summary>
@@ -25,6 +27,10 @@ namespace CodingTracker.S1m0n32002.Models
         /// </summary>
         static Settings _Current = new();
 
+        /// <summary>
+        /// Save the settings to the file.
+        /// </summary>
+        /// <param name="filename"> The name of the settings file to save. </param>
         public static void Save(string filename = "AppSettings")
         {
             var output = JsonConvert.SerializeObject(Settings._Current, Formatting.Indented);
@@ -45,7 +51,7 @@ namespace CodingTracker.S1m0n32002.Models
                                                                                         NullValueHandling = NullValueHandling.Include,
                                                                                     }) ?? new();
 
-
+            // Checks if all properties are set inside the file.
             var missingProperties = _Current.GetType().GetProperties().Where(x => x.GetValue(Settings._Current) == null);
 
             if (missingProperties.Any())
