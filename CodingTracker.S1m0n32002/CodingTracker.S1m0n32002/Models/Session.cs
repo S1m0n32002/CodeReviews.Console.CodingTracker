@@ -1,5 +1,9 @@
-﻿namespace HabitTracker.S1m0n32002.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CodingTracker.S1m0n32002.Models
 {
+    [Table(TabName)]
     public class Session
     {
         /// <summary>
@@ -10,26 +14,41 @@
         /// <summary>
         /// Id of Session
         /// </summary>
+        [Key]
+        [Required]
         public int Id { get; set; } = -1;
-        
+
         /// <summary>
         /// Description of the session
         /// </summary>
-        public string Description { get; set; } = "";
+        public string? Description { get; set; } = "";
 
         /// <summary>
         /// Starting time of session
         /// </summary>
+        [Required]
         public DateTime Start { get; set; }
 
         /// <summary>
         /// Ending time of session
         /// </summary>
-        public DateTime End { get; set; }
+        public DateTime? End { get; set; }
 
         /// <summary>
         /// Returns the duration of the session
         /// </summary>
-        public TimeSpan Duration => End - Start;
+        /// <remarks> If <see cref="End"/> is <see langword="null"/> it is assumed to be ongoing and return the time from start to now</remarks>
+        [NotMapped]
+        public TimeSpan Duration
+        {
+            get
+            {
+                if (End == null)
+                    return DateTime.Now - Start;
+                else
+                    return End.Value - Start;
+            }
+        }
+    
     }
 }

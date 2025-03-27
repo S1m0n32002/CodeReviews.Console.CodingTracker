@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "Sessions" (
+	"Id"	INTEGER NOT NULL UNIQUE,
+	"Description"	TEXT,
+	"Start"	TEXT NOT NULL,
+	"End"	TEXT,
+	PRIMARY KEY("Id")
+);

@@ -5,17 +5,10 @@ namespace CodingTracker.S1m0n32002.Models
     /// <summary>
     /// Manages the settings of the application.
     /// </summary>
-    class Settings
+    internal class Settings
     {
-        /// <summary>
-        /// The name with extension of the database file.
-        /// </summary>
-        public string? DbName { get; set; }
-
-        /// <summary>
-        /// Path to the Database file.
-        /// </summary>
-        public string? DbPath { get; set; }
+        public string? Db { set; get; }
+        public string? Template { set; get; }
 
         /// <summary>
         /// Returns the current application settings.
@@ -34,7 +27,7 @@ namespace CodingTracker.S1m0n32002.Models
         public static void Save(string filename = "AppSettings")
         {
             var output = JsonConvert.SerializeObject(Settings._Current, Formatting.Indented);
-            System.IO.File.WriteAllText(Path.Combine("Settings",$"{filename}.json"), output);
+            File.WriteAllText(Path.Combine("Settings",$"{filename}.json"), output);
         }
 
         /// <summary>
@@ -44,7 +37,7 @@ namespace CodingTracker.S1m0n32002.Models
         /// <exception cref="InvalidOperationException"> Thrown when a property is missing from the settings file. </exception>
         public static void Load(string filename = "AppSettings")
         {
-            var input = System.IO.File.ReadAllText(Path.Combine("Settings", $"{filename}.json"));
+            var input = File.ReadAllText(Path.Combine("Settings", $"{filename}.json"));
             _Current = JsonConvert.DeserializeObject<Settings>(input, new JsonSerializerSettings() 
                                                                                     {
                                                                                         MissingMemberHandling = MissingMemberHandling.Error,

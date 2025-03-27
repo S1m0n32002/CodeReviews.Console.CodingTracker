@@ -1,12 +1,9 @@
-﻿using HabitTracker.S1m0n32002.Models;
-using Microsoft.Data.Sqlite;
-using Spectre.Console;
-using System.Diagnostics;
-using System.Globalization;
-namespace HabitTracker.S1m0n32002.Controllers;
+﻿using Spectre.Console;
+namespace CodingTracker.S1m0n32002.Controllers;
 
- class MenuController
+class MenuController
 {
+
     enum MainMenuChoices
     {
         Begin, 
@@ -387,13 +384,18 @@ namespace HabitTracker.S1m0n32002.Controllers;
         return habit;
     }
 
-     void PrintRule(string Title)
+    /// <summary>
+    /// Print a rule
+    /// </summary>
+    /// <param name="Title"> Title of the rule </param>
+    static void PrintRule(string Title)
     {
         Rule rule = new()
         {
             Title = $"[white]{Title}[/]",
             Justification = Justify.Left,
-            Style = Style.Parse("yellow")
+            Style = Style.Parse("yellow"),
+            Border = BoxBorder.Heavy
         };
         AnsiConsole.Write(rule);
         AnsiConsole.WriteLine();

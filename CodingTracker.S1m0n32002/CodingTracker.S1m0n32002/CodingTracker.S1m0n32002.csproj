@@ -8,18 +8,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\DbController.cs" />
-    <Compile Remove="Controllers\MenuController.cs" />
+    <Compile Remove="Controllers\DbController_OLD.cs" />
+    <Compile Remove="Controllers\MenuController_OLD.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Controllers\DbController.cs" />
-    <None Include="Controllers\MenuController.cs" />
+    <None Include="Controllers\DbController_OLD.cs" />
+    <None Include="Controllers\MenuController_OLD.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\repo\Utils\SpectreExplorer\SpectreExplorer\SpectreExplorer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\" />
   </ItemGroup>
 
 </Project>
