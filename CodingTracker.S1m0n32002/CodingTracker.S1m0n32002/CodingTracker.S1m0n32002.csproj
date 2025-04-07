@@ -8,12 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\DbController_OLD.cs" />
     <Compile Remove="Controllers\MenuController_OLD.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Controllers\DbController_OLD.cs" />
     <None Include="Controllers\MenuController_OLD.cs" />
   </ItemGroup>
 
