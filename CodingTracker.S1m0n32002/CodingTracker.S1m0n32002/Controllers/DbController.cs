@@ -2,15 +2,13 @@
 using System.Data.SQLite;
 using CodingTracker.S1m0n32002.Models;
 using Dapper;
-using System.Diagnostics.CodeAnalysis;
-using System.Data;
-using Microsoft.VisualBasic;
-using System.Runtime.InteropServices;
 
 namespace CodingTracker.S1m0n32002.Controllers;
 
-public class DbController
+public static class DbController
 {
+    private static readonly Lock _lock = new();
+
     /// <summary>
     /// Delete a session from the database
     /// </summary>
@@ -95,51 +93,53 @@ public class DbController
     /// </summary>
     static void CheckAndInitDB()
     {
-        AnsiConsole.Status().Start("Checking database...", ctx =>
+        lock (_lock)
         {
-            // Assumes the database was already created correctly if the file exists
             if (System.IO.File.Exists(Settings.Current.Db))
                 return;
 
-            AnsiConsole.WriteLine("Database not found!");
-
-            ctx.Spinner(Spinner.Known.Star); // not working :(
-            ctx.Status("Initializing database...");
-            AnsiConsole.WriteLine("Loading database template...");
-
-            string Template;
-            if (System.IO.File.Exists(Settings.Current.Template))
-                Template = System.IO.File.ReadAllText(Settings.Current.Template);
-            else
-                throw new System.IO.FileNotFoundException($"Database initialization failed. Restore \"{Settings.Current.Template}\" to continue");
-
-            AnsiConsole.WriteLine("Database template loaded!");
-            ctx.Status("Creating database...");
-
-            using var connection = Connect();
-
-            connection.Execute(Template);
-
-            AnsiConsole.WriteLine("Database created!");
-            ctx.Status("Populating database...");
-
-            var start = DateTime.Now;
-            var rnd = new Random();
-
-            for (int i = 0; i <= 50; i++)
+            AnsiConsole.Status().Start("Checking database...", ctx =>
             {
-                var added = SaveSession($"DEMO Session {i}", start.AddHours(i), start.AddHours(i + rnd.Next(0, 10)));
+                AnsiConsole.WriteLine("Database not found!");
 
-                if (added != null)
-                    AnsiConsole.WriteLine($"Added: {added.Description} | Start: {added.Start}");
-            }
+                ctx.Spinner(Spinner.Known.Circle); // not working :(
+                ctx.Status("Initializing database...");
+                AnsiConsole.WriteLine("Loading database template...");
 
-            SaveSession($"DEMO Session Occurring", DateTime.Now);
+                string Template;
+                if (System.IO.File.Exists(Settings.Current.Template))
+                    Template = System.IO.File.ReadAllText(Settings.Current.Template);
+                else
+                    throw new System.IO.FileNotFoundException($"Database initialization failed. Restore \"{Settings.Current.Template}\" to continue");
 
-            AnsiConsole.WriteLine("Database ready!");
-        });
+                AnsiConsole.WriteLine("Database template loaded!");
+                ctx.Status("Creating database...");
 
-        Console.Clear();
+                using var connection = Connect();
+
+                connection.Execute(Template);
+
+                AnsiConsole.WriteLine("Database created!");
+                ctx.Status("Populating database...");
+
+                var start = DateTime.Now;
+                var rnd = new Random();
+
+                for (int i = 0; i <= 50; i++)
+                {
+                    var added = SaveSession($"DEMO Session {i}", start.AddHours(i), start.AddHours(i + rnd.Next(0, 10)));
+
+                    if (added != null)
+                        AnsiConsole.WriteLine($"Added: {added.Description} | Start: {added.Start}");
+                }
+
+                SaveSession($"DEMO Session Occurring", DateTime.Now);
+
+                AnsiConsole.WriteLine("Database ready!");
+            });
+
+            Console.Clear();
+        }
     }
 
     /// <summary>
@@ -152,5 +152,4 @@ public class DbController
             DataSource = Settings.Current.Db
         }.ConnectionString);
     }
-
 }
