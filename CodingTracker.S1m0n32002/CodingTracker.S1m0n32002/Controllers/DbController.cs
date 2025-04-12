@@ -21,7 +21,7 @@ public static class DbController
 
         using var connection = Connect();
 
-        connection.Execute(StrCmd, session.Id);
+        connection.Execute(StrCmd, new { session.Id });
     }
 
     /// <summary>
@@ -71,10 +71,10 @@ public static class DbController
                                                     $"@{nameof(Session.End)})" +
                                             $"RETURNING *;";
         else
-            StrCmd = $"UPDATE [{Session.TabName}] SET {nameof(Session.Description)} = @{nameof(Session.Description)}," +
-                                                    $"{nameof(Session.Start)} = @{nameof(Session.Start)}," +
-                                                    $"{nameof(Session.End)} = @{nameof(Session.End)}" +
-                                                 $"WHERE {nameof(Session.Id)} = @{nameof(Session.Id)}" +
+            StrCmd = $"UPDATE [{Session.TabName}] SET {nameof(Session.Description)} = @{nameof(Session.Description)}, " +
+                                                    $"{nameof(Session.Start)} = @{nameof(Session.Start)}, " +
+                                                    $"{nameof(Session.End)} = @{nameof(Session.End)} " +
+                                                 $"WHERE {nameof(Session.Id)} = @{nameof(Session.Id)} " +
                                                  $"RETURNING *;";
 
         using var connection = Connect();

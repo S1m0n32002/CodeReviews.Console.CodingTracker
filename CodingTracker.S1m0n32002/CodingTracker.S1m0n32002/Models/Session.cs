@@ -43,10 +43,7 @@ namespace CodingTracker.S1m0n32002.Models
         {
             get
             {
-                if (End == null)
-                    return DateTime.Now - Start;
-                else
-                    return End.Value - Start;
+                  return  (End ?? DateTime.Now) - Start;
             }
         }
     

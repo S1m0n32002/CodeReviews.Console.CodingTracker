@@ -1,5 +1,6 @@
 ﻿using CodingTracker.S1m0n32002.Models;
 using Spectre.Console;
+using System.Globalization;
 
 namespace CodingTracker.S1m0n32002.Controllers
 {
@@ -12,7 +13,7 @@ namespace CodingTracker.S1m0n32002.Controllers
             Exit
         }
 
-        readonly static Dictionary<string, MainMenuChoices> mainMenuStrs = new()
+        static readonly Dictionary<string, MainMenuChoices> mainMenuStrs = new()
         {
             { "Begin"           , MainMenuChoices.Begin},
             { "Show report"     , MainMenuChoices.ShowReport },
@@ -37,7 +38,7 @@ namespace CodingTracker.S1m0n32002.Controllers
                     switch (result)
                     {
                         case MainMenuChoices.Begin:
-                            //EditHabits();
+                            EditSessions();
                             break;
                         case MainMenuChoices.ShowReport:
                             ShowReport();
@@ -48,49 +49,181 @@ namespace CodingTracker.S1m0n32002.Controllers
                 }
             }
         }
-/*
-        /// <summary>
-        /// Allows user to edit a habit
-        /// </summary>
-        Habit EditHabit(Habit habit)
+
+        enum Actions
         {
-            Console.Clear();
+            Edit,
+            Delete,
+            Exit
+        }
 
-            PrintRule("Edit Habit");
+        static readonly Dictionary<string, Actions> actionsMenuStrs = new()
+        {
+            { "Edit"              , Actions.Edit },
+            { "Delete"            , Actions.Delete },
+            { "[yellow]Exit[/]"   , Actions.Exit   }
+        };
 
-            var namePrompt = new TextPrompt<string>("Enter habit name:")
+        /// <summary>
+        /// Promt user to choose an action
+        /// </summary>
+        static Actions? ChooseAction()
+        {
+            AnsiConsole.Clear();
+
+            PrintRule("Choose Action");
+
+            var prompt = new SelectionPrompt<string>();
+
+            prompt.AddChoices(actionsMenuStrs.Keys);
+
+            var chosenAction = AnsiConsole.Prompt(prompt);
+
+            if (actionsMenuStrs.TryGetValue(chosenAction, out Actions action))
+                return action;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Show all sessions
+        /// </summary>
+        static void EditSessions()
+        {
+            while (true)
+            {
+                var session = ChooseSession();
+
+                if (session == null)
+                    return;
+
+                if (session.Id < 0)
+                {
+                    session = EditSession(session);
+
+                    DbController.SaveSession(session);
+
+                    continue;
+                }
+
+                switch (ChooseAction())
+                {
+                    case Actions.Edit:
+                        DbController.SaveSession(EditSession(session));
+                        break;
+                    case Actions.Delete:
+                        DeleteSession(session);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Prompt user to choose a session
+        /// </summary>
+        /// <returns> The chosen session or null if user chose to exit</returns>
+        static Session? ChooseSession()
+        {
+            AnsiConsole.Clear();
+
+            PrintRule("Choose session"); // idk why but this doesn't remain on screen the first time it's called
+
+            Dictionary<string, Session?> menuStrs = [];
+
+            int c = 0;
+            foreach (Session session in DbController.LoadAllSessions())
+            {
+                menuStrs.Add($"{c++}.\t{session.Description}", session);
+            }
+
+            menuStrs.Add("[green]Add[/]", new Session());
+            menuStrs.Add("[yellow]Exit[/]", null);
+
+            var prompt = new SelectionPrompt<string>()
+                .AddChoices(menuStrs.Keys).PageSize(Console.BufferHeight - 4);
+
+            var chosenSessionName = AnsiConsole.Prompt(prompt);
+
+            if (menuStrs.TryGetValue(chosenSessionName, out Session? chosenSession))
+                return chosenSession;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Allows user to edit a session
+        /// </summary>
+        static Session EditSession(Session session)
+        {
+            AnsiConsole.Clear();
+
+            PrintRule("Edit session");
+
+            var namePrompt = new TextPrompt<string>("Enter session description:")
             {
                 ShowDefaultValue = true,
                 AllowEmpty = false,
             };
-            namePrompt.DefaultValue(!string.IsNullOrWhiteSpace(habit.Name) ? habit.Name : "Habit");
+            namePrompt.DefaultValue(!string.IsNullOrWhiteSpace(session.Description) ? session.Description : "I've done this, that and also that...");
 
-            habit.Name = AnsiConsole.Prompt(namePrompt);
+            session.Description = AnsiConsole.Prompt(namePrompt);
 
-            var periodicityPrompt = new SelectionPrompt<Habit.Periodicities>()
+            AnsiConsole.WriteLine("Choose start date:");
+            session.Start = ChooseTime(session.Start) ?? DateTime.Now;
+
+            AnsiConsole.WriteLine("Choose end date or leave empty if still ongoing:");
+            session.End = ChooseTime(session.End, session.Start);
+
+            return session;
+
+            static DateTime? ChooseTime(DateTime? defaultTime, DateTime? startTime = null)
             {
-                Title = $"Select periodicity [green]({habit.Periodicity})[/]"
-            };
+                bool allowEmpty = defaultTime == null;
 
-            if (habit.Id < 0)
-            {
-                periodicityPrompt.AddChoices(Enum.GetValues<Habit.Periodicities>()
-                                                        .Where(p => p != Habit.Periodicities.None));
+                var prompt = new TextPrompt<DateTime>($"Enter date [yellow](Format: {CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern})[/]")
+                {
+                    ShowDefaultValue = true,
+                    AllowEmpty = allowEmpty,
+                    Converter = (x) => x.ToString(),
+                    Culture = CultureInfo.CurrentCulture,
+                };
+
+                if (defaultTime == new DateTime())
+                    defaultTime = DateTime.Now;
+
+                if (defaultTime != null)
+                    prompt.DefaultValue((DateTime)defaultTime);
+
+                DateTime? time;
+
+                while (true)
+                {
+                    time = AnsiConsole.Prompt(prompt);
+
+                    if (time != new DateTime())
+                    {
+                        if (startTime != null)
+                        {
+                            if (time > startTime) break;
+                            AnsiConsole.MarkupInterpolated($"This time must be before {startTime:G}{Environment.NewLine}");
+                        }
+                        else
+                            break;
+                    }
+                    else
+                    {
+                        time = null;
+                        break;
+                    }
+                }
+
+                return time;
             }
-            else
-            {
-                periodicityPrompt.AddChoices(Enum.GetValues<Habit.Periodicities>()
-                                                        .OrderBy(p => p == Habit.Periodicities.None ? -1 : 1));
-            }
 
-            var periodicity = AnsiConsole.Prompt(periodicityPrompt);
-
-            if (periodicity != Habit.Periodicities.None)
-                habit.Periodicity = periodicity;
-
-            return habit;
         }
-*/
+
         /// <summary>
         /// Show the report of all Sessions
         /// </summary>
@@ -113,63 +246,53 @@ namespace CodingTracker.S1m0n32002.Controllers
 
             foreach (Session session in Sessions)
             {
+                var duration = session.Duration;
                 grid.AddRow([
                     new Text(session.Id.ToString()).Centered(),
                     new Text(session.Description ?? "").Centered(),
-                    new Text(session.Start.ToString()).Centered(),
-                    new Text(session.End.ToString() ?? "").Centered(),
-                    new Text(session.Duration.ToString()).Centered()
+                    new Text(session.Start.ToString("G")).Centered(),
+                    new Text(session.End?.ToString("G") ?? "Ongoing").Centered(),
+                    new Text($"{duration.TotalHours:0}:{duration.Minutes:00}:{duration.Seconds:00}").Centered()
                     ]);
             }
 
-            Console.Clear();
+            AnsiConsole.Clear();
             AnsiConsole.Write(grid);
             AnsiConsole.Markup("Press [blue]ENTER[/] to exit");
             Console.ReadLine();
         }
-        /*
-        /// <summary>
-        /// Allows user to edit a habit
-        /// </summary>
-        void EditSettings(Habit habit)
+
+        enum MyConfirmation
         {
-            Console.Clear();
-
-            PrintRule("Edit Settings");
-
-            var namePrompt = new TextPrompt<string>("Enter habit name:")
-            {
-                ShowDefaultValue = true,
-                AllowEmpty = false,
-            };
-            namePrompt.DefaultValue(!string.IsNullOrWhiteSpace(habit.Name) ? habit.Name : "Habit");
-
-            habit.Name = AnsiConsole.Prompt(namePrompt);
-
-            var periodicityPrompt = new SelectionPrompt<Habit.Periodicities>()
-            {
-                Title = $"Select periodicity [green]({habit.Periodicity})[/]"
-            };
-
-            if (habit.Id < 0)
-            {
-                periodicityPrompt.AddChoices(Enum.GetValues<Habit.Periodicities>()
-                                                        .Where(p => p != Habit.Periodicities.None));
-            }
-            else
-            {
-                periodicityPrompt.AddChoices(Enum.GetValues<Habit.Periodicities>()
-                                                        .OrderBy(p => p == Habit.Periodicities.None ? -1 : 1));
-            }
-
-            var periodicity = AnsiConsole.Prompt(periodicityPrompt);
-
-            if (periodicity != Habit.Periodicities.None)
-                habit.Periodicity = periodicity;
-
-            return habit;
+            No,
+            Yes
         }
-        */
+
+        /// <summary>
+        /// Allows user to delete a session
+        /// </summary>
+        static Session DeleteSession(Session session)
+        {
+            AnsiConsole.Clear();
+
+            PrintRule("Edit Session");
+
+            var prompt = new SelectionPrompt<MyConfirmation>()
+            {
+                Title = $"Are you sure you want to delete \"{session.Description}\"?"
+            }
+            .AddChoices(Enum.GetValues<MyConfirmation>());
+
+            var answer = AnsiConsole.Prompt(prompt);
+
+            if (answer == MyConfirmation.Yes)
+            {
+                DbController.DeleteSession(session);
+            }
+
+            return session;
+        }
+
         /// <summary>
         /// Print a rule
         /// </summary>
