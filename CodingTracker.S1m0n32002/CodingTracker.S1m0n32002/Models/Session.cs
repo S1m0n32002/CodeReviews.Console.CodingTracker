@@ -39,13 +39,12 @@ namespace CodingTracker.S1m0n32002.Models
         /// </summary>
         /// <remarks> If <see cref="End"/> is <see langword="null"/> it is assumed to be ongoing and return the time from start to now</remarks>
         [NotMapped]
-        public TimeSpan Duration
-        {
-            get
-            {
-                  return  (End ?? DateTime.Now) - Start;
-            }
-        }
-    
+        public TimeSpan Duration => (End ?? DateTime.Now) - Start;
+
+        /// <summary>
+        /// Returns <see langword="true"/> if the session is ongoing
+        /// </summary>
+        [NotMapped]
+        public bool IsOngoing => (End == null);
     }
 }
