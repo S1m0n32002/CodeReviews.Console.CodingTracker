@@ -21,6 +21,9 @@ Console based CRUD application to track time spent coding daily.
 - [ ] Create reports where the users can see their total and average coding session per period.
 - [ ] Create the ability to set coding goals and show how far the users are from reaching their goal, along with how many hours a day they would have to code to reach their goal. You can do it via SQL queries or with C#.
 
+## Others:
+- Menu that enables the user to modify settings
+
 # Resources
 - [The C# academy project page](https://thecsharpacademy.com/project/13/coding-tracker)
 - [SQLite documentation](https://www.sqlite.org/)

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static CodingTracker.S1m0n32002.Controllers.DbController;
 
 namespace CodingTracker.S1m0n32002.Models
 {
@@ -46,5 +47,22 @@ namespace CodingTracker.S1m0n32002.Models
         /// </summary>
         [NotMapped]
         public bool IsOngoing => (End == null);
+
+        /// <summary>
+        /// Creates a new session in the database
+        /// </summary>
+        /// <param name="description"> Description of the session </param>
+        /// <param name="start"> Starting time of the session </param>
+        /// <param name="end"> Ending time of the session </param>
+        /// <returns> The session created </returns>
+        public Session(string description, DateTime start, DateTime? end = null)
+        {
+            Description = description;
+            Start = start; 
+            End = end;
+        }
+
+        public Session() { }
+
     }
 }

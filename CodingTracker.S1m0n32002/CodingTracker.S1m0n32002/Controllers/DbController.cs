@@ -37,23 +37,11 @@ public static class DbController
     }
 
     /// <summary>
-    /// Creates a new session in the database
-    /// </summary>
-    /// <param name="description"> Description of the session </param>
-    /// <param name="start"> Starting time of the session </param>
-    /// <param name="end"> Ending time of the session </param>
-    /// <returns> The session created </returns>
-    public static Session? SaveSession(string description, DateTime start, DateTime? end = null)
-    {
-        return SaveSession(new Session() { Description = description, Start = start, End = end });
-    }
-
-    /// <summary>
-    /// Saves the session passed in the database
+    /// Saves the session in the database
     /// </summary>
     /// <param name="session"> Session to save </param>
     /// <returns> The session saved </returns>
-    public static Session? SaveSession(Session session)
+    public static Session? Save(this Session session)
     {
         CheckAndInitDB();
 
@@ -91,7 +79,7 @@ public static class DbController
     /// <summary>
     /// Check and initialize database/>
     /// </summary>
-    static void CheckAndInitDB()
+    public static void CheckAndInitDB()
     {
         lock (_lock)
         {
@@ -145,7 +133,7 @@ public static class DbController
     /// <summary>
     /// Instantiate connection to database
     /// </summary>
-    static SQLiteConnection Connect()
+    public static SQLiteConnection Connect()
     {
         return new SQLiteConnection(new SQLiteConnectionStringBuilder
         {
