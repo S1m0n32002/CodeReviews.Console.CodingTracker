@@ -109,7 +109,7 @@ namespace CodingTracker.S1m0n32002.Controllers
 
                 prompt.DefaultValue(TimeSpan.Zero);
 
-                return AnsiConsole.Prompt(prompt); ;
+                return AnsiConsole.Prompt(prompt);
             }
 
         }
