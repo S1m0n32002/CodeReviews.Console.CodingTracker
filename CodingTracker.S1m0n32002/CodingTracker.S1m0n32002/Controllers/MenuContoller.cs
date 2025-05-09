@@ -53,7 +53,7 @@ namespace CodingTracker.S1m0n32002.Controllers
                             break;
                         case MainMenuChoices.SetAGoal:
                             Wip();
-                            // when finished uncomment EditGoals();
+                            // add EditGoals when done
                             break;
                         case MainMenuChoices.ShowReport:
                             ShowReport();
