@@ -2,7 +2,7 @@
 using static CodingTracker.S1m0n32002.Controllers.SessionController;
 using static CodingTracker.S1m0n32002.Controllers.ReportController;
 using static CodingTracker.S1m0n32002.Controllers.SettingsController;
-using static CodingTracker.S1m0n32002.Controllers.GoalController;
+using System.Security.Principal;
 
 namespace CodingTracker.S1m0n32002.Controllers
 {
@@ -53,7 +53,8 @@ namespace CodingTracker.S1m0n32002.Controllers
                             EditSessions();
                             break;
                         case MainMenuChoices.SetAGoal:
-                            EditGoals();
+                            WIP();
+                            //EditGoals();
                             break;
                         case MainMenuChoices.ShowReport:
                             ShowReport();
@@ -101,6 +102,22 @@ namespace CodingTracker.S1m0n32002.Controllers
                 return action;
 
             return null;
+        }
+
+        public static void WIP()
+        {
+            Console.Clear();
+            PrintRule("Work in progress");
+
+            AnsiConsole.MarkupLine("[white]Hi! This feature unfortunately is not implemented yet.\n" +
+                                   "Theese duks are keeping me busy, keep an eye on them while i'm working\n[/]" +
+                           "[yellow]  _      _      _   \r\n" +
+                                   ">(.)__ <(.)__ =(.)__\r\n" +
+                                   " (___/  (___/  (___/[/]");
+
+            AnsiConsole.MarkupLine("Press [blue]ENTER[/] to exit.");
+
+            Console.ReadLine();
         }
 
         /// <summary>

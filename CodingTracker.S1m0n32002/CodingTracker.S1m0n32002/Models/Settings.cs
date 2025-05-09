@@ -21,7 +21,7 @@ namespace CodingTracker.S1m0n32002.Models
         static Settings _Current = new();
 
         /// <summary>
-        /// Save the settings to the file.
+        /// SaveSession the settings to the file.
         /// </summary>
         /// <param name="filename"> The name of the settings file to save. </param>
         public static void Save(string filename = "AppSettings")

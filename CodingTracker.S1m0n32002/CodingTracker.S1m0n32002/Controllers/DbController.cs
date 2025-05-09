@@ -41,7 +41,7 @@ public static class DbController
     /// </summary>
     /// <param name="session"> Session to save </param>
     /// <returns> The session saved </returns>
-    public static Session? Save(this Session session)
+    public static Session? SaveSession(this Session session)
     {
         CheckAndInitDB();
 
@@ -115,13 +115,13 @@ public static class DbController
 
                 for (int i = 0; i <= 50; i++)
                 {
-                    var added = SaveSession($"DEMO Session {i}", start.AddHours(i), start.AddHours(i + rnd.Next(0, 10)));
+                    var added = SaveSession(new Session($"DEMO Session {i}", start.AddHours(i), start.AddHours(i + rnd.Next(0, 10))));
 
                     if (added != null)
                         AnsiConsole.WriteLine($"Added: {added.Description} | Start: {added.Start}");
                 }
 
-                SaveSession($"DEMO Session Occurring", DateTime.Now);
+                SaveSession(new Session($"DEMO Session Occurring", DateTime.Now));
 
                 AnsiConsole.WriteLine("Database ready!");
             });

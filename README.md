@@ -1,6 +1,8 @@
 # Console Coding Tracker
 Console based CRUD application to track time spent coding daily.
 
+Unfortunately I haven't really finished all the challanges on this one yet and I wanna move onto the other projects, but I will try to finish it in the future. 
+
 # Project Requirements
 ## Mandatoy:
 - [x] This application has the same requirements as the previous project, except that now you'll be logging your daily coding time.
@@ -32,4 +34,11 @@ Console based CRUD application to track time spent coding daily.
 - [Newtonsoft.Json for configuration files](https://www.newtonsoft.com/json)
 
 # Screenshots
-
+![Main Menu](Pictures/Main%20Menu.png)
+![Choose session](Pictures/Choose%20Session.png)
+![Action selection](Pictures/Action%20Selection.png)
+![Session editing](Pictures/Session%20editing.png)
+![Session deletion](Pictures/Session%20deletion.png)
+![Report](Pictures/Report.png)
+![Settings](Pictures/Settings%20menu.png)
+![File explorer](Pictures/File%20explorer.png)
