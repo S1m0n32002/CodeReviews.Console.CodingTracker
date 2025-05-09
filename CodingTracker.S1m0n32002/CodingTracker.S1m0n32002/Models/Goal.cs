@@ -49,7 +49,7 @@ namespace CodingTracker.S1m0n32002.Models
         /// <summary>
         /// Flags the goal as completed 
         /// </summary>
-        public bool IsCompleted { get; set; } = false;
+        public bool IsCompleted { get; set; };
 
     }
 }

@@ -27,7 +27,7 @@ namespace CodingTracker.S1m0n32002.Models
         public static void Save(string filename = "AppSettings")
         {
             var output = JsonConvert.SerializeObject(Settings._Current, Formatting.Indented);
-            File.WriteAllText(Path.Combine("Settings",$"{filename}.json"), output);
+            File.WriteAllText(Path.Combine("Settings", $"{filename}.json"), output);
         }
 
         /// <summary>
@@ -38,11 +38,11 @@ namespace CodingTracker.S1m0n32002.Models
         public static void Load(string filename = "AppSettings")
         {
             var input = File.ReadAllText(Path.Combine("Settings", $"{filename}.json"));
-            _Current = JsonConvert.DeserializeObject<Settings>(input, new JsonSerializerSettings() 
-                                                                                    {
-                                                                                        MissingMemberHandling = MissingMemberHandling.Error,
-                                                                                        NullValueHandling = NullValueHandling.Include,
-                                                                                    }) ?? new();
+            _Current = JsonConvert.DeserializeObject<Settings>(input, new JsonSerializerSettings()
+            {
+                MissingMemberHandling = MissingMemberHandling.Error,
+                NullValueHandling = NullValueHandling.Include,
+            }) ?? new();
 
             // Checks if all properties are set inside the file.
             var missingProperties = _Current.GetType().GetProperties().Where(x => x.GetValue(Settings._Current) == null);

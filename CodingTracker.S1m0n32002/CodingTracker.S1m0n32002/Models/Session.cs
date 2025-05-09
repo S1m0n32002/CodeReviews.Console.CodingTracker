@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static CodingTracker.S1m0n32002.Controllers.DbController;
 
 namespace CodingTracker.S1m0n32002.Models
 {
@@ -58,7 +57,7 @@ namespace CodingTracker.S1m0n32002.Models
         public Session(string description, DateTime start, DateTime? end = null)
         {
             Description = description;
-            Start = start; 
+            Start = start;
             End = end;
         }
 

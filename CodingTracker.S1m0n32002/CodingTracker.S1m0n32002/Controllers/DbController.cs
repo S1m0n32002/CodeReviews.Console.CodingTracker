@@ -1,7 +1,7 @@
-﻿using Spectre.Console;
-using System.Data.SQLite;
-using CodingTracker.S1m0n32002.Models;
+﻿using CodingTracker.S1m0n32002.Models;
 using Dapper;
+using Spectre.Console;
+using System.Data.SQLite;
 
 namespace CodingTracker.S1m0n32002.Controllers;
 

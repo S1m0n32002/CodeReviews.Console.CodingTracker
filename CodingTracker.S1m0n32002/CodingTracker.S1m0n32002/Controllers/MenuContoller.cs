@@ -1,8 +1,7 @@
 ﻿using Spectre.Console;
-using static CodingTracker.S1m0n32002.Controllers.SessionController;
 using static CodingTracker.S1m0n32002.Controllers.ReportController;
+using static CodingTracker.S1m0n32002.Controllers.SessionController;
 using static CodingTracker.S1m0n32002.Controllers.SettingsController;
-using System.Security.Principal;
 
 namespace CodingTracker.S1m0n32002.Controllers
 {
@@ -53,8 +52,8 @@ namespace CodingTracker.S1m0n32002.Controllers
                             EditSessions();
                             break;
                         case MainMenuChoices.SetAGoal:
-                            WIP();
-                            //EditGoals();
+                            Wip();
+                            // when finished uncomment EditGoals();
                             break;
                         case MainMenuChoices.ShowReport:
                             ShowReport();
@@ -104,7 +103,7 @@ namespace CodingTracker.S1m0n32002.Controllers
             return null;
         }
 
-        public static void WIP()
+        public static void Wip()
         {
             Console.Clear();
             PrintRule("Work in progress");
