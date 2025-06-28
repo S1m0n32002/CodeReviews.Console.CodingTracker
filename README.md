@@ -41,4 +41,4 @@ Unfortunately I haven't really finished all the challanges on this one yet and I
 ![Session deletion](Pictures/Session%20deletion.png)
 ![Report](Pictures/Report.png)
 ![Settings](Pictures/Settings%20menu.png)
-![File explorer](Pictures/File%20explorer.png)
+![File explorer](Pictures/File%20Explorer.png)
